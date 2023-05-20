@@ -23,6 +23,10 @@ class Todo:
         self.taskname = taskname
 
         while self.taskname == None:
+            query = "SELECT * FROM todo"
+            self.cursor.execute(query)
+            print(self.cursor.fetchall())
+
             print("Please provide the taskname")
             tmp = input()
             if len(tmp) == 0:
@@ -49,7 +53,8 @@ class Todo:
     def read(self):
         query = f"SELECT * FROM todo WHERE task LIKE '{self.taskname}%'"
         self.cursor.execute(query)
-        print(self.cursor.fetchone())
+        elem = self.cursor.fetchone()
+        print(elem)
         return 1
 
     def set(self):
@@ -72,9 +77,9 @@ class Todo:
         query = (
             f"UPDATE todo SET {column} = '{value}' WHERE task LIKE '{self.taskname}%'"
         )
-        print(query)
         self.cursor.execute(query)
-        print(self.cursor.fetchone())
+        entry = self.cursor.fetchone()
+        print(entry)
         return 0
 
     def delete(self):

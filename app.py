@@ -16,6 +16,7 @@ if len(sys.argv) < 2:
     exit(1)
 
 dbconn = sqlite3.connect("todos.db")
+# dbconn.row_factory = sqlite3.Row
 cur = dbconn.cursor()
 res = cur.execute("SELECT name FROM sqlite_master WHERE name='todo'")
 if res.fetchone() is None:
@@ -23,7 +24,7 @@ if res.fetchone() is None:
 
 parser = argparse.ArgumentParser(
     description=f"""
-A simple todo app. You can add, read or delete todos.
+A simple todo app. You can [add], [list], [read] or [delete] todos.
 They will be saved in a sqlite db.
 The fields will be {config['main']['columns']}
 """
@@ -49,19 +50,18 @@ if args.action == "list":
     dbconn.close()
     exit(1)
 
-todo = Todo(cur, args.taskname)
+todo = Todo(cur, args.taskname)  # init TODO
 if args.action == "add":
     todo.create()
     dbconn.commit()
 elif args.action == "read":
-    todo = Todo(cur, args.taskname)
     todo.read()
 elif args.action == "delete":
     todo.delete()
     dbconn.commit()
 elif args.action == "set":
-    todo = Todo(cur, args.taskname)
     todo.set()
+    dbconn.commit()
 else:
     print("Use [-h] for help with commands")
 
